@@ -35,8 +35,8 @@ docs = gc.open("Documentation Feed 2018").sheet1
 
 reg = gc.open("Registered").sheet1
 
-sched = gc.open("Upcoming Robotics Events and Meetings 2018").sheet1
-days = sched.get_all_records()
+#sched = gc.open("Upcoming Robotics Events and Meetings 2018").sheet1
+#days = sched.get_all_records()
 
 # more constants
 SFTCMD = "#softwaredoc"
@@ -244,19 +244,19 @@ if __name__ == "__main__":
                             else:
                                 print(currname, "said", command, "in", channel)
                 # If it is 8:00 on any given day
-                if convert_ts_to_date(time.time(), "time") == "19-50-00":
-                    print("It's time!")
+#                if convert_ts_to_date(time.time(), "time") == "19-50-00":
+#                    print("It's time!")
                     # If it is a meeting date, then check who needs to document.
-                    for i in range(0, len(days)):
-                        if convert_ts_to_date(time.time(), "date") == days[i]["Date"] and \
-                                        days[i]['Event'] == "Meeting":
-                            print(convert_ts_to_date(time.time(), "date"),"is a meeting day!")
-                            annoy_all()
-                            print("I annoyed people!")
+#                    for i in range(0, len(days)):
+#                        if convert_ts_to_date(time.time(), "date") == days[i]["Date"] and \
+#                                        days[i]['Event'] == "Meeting":
+#                            print(convert_ts_to_date(time.time(), "date"),"is a meeting day!")
+#                            annoy_all()
+#                            print("I annoyed people!")
                 # Restart the script every half hour
-                if int(convert_ts_to_date(time.time(), "minute")) - int(sys_time_min) == 30:
-                    print("Restarting...")
-                    os.execv(__file__,sys.argv)
+#                if int(convert_ts_to_date(time.time(), "minute")) - int(sys_time_min) == 30:
+#                    print("Restarting...")
+#                    os.execv(__file__,sys.argv)
                 # Wait one second between all event handling
                 time.sleep(1)
     else:
