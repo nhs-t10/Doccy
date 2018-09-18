@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "doccy-215702",
+  "private_key_id": "bd6ad5890442b9b52b4a75fb3eef6812abebadb1",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC+d0xJ2XQ8Ca90\ni2YlpwIyAAODigIIi0n7upSpsuIlAyKHEu9FpVd3ifY6hAuIfiK3D6s3rfGW+y/3\nBIyF1O3O65lYbHTdKpGCFQOc7uN9stREUFyxoIzKyUJIthxzK2F1qFelhcrbAooI\nwaykf7ccuF/4kFSmFgPDQ4gO+ok9ApM4lQovd44at5uJRD2v8iQfxQ+XMqNmd2zI\nbefZkDiJBRdl8W4yJRZb2MMNO/PML5xk/K0w+zH7DO4zF9RGq0G76FJUZyyTRhlk\nK4yIjUIjrrVfRhP4pqbycvI3ZC7ApdMfsYjc68ZW0HhnlBR3WBjgiwpWxpTT0QHU\nj4bq/mz5AgMBAAECggEACP4cc7so3gHODyhavwna1G4EPHRqYqli6Zf2V2nK/Bjh\nCzQVaHolPk9c+QfNfJkJ/g8nFBaqGqkK63SDRvlV7ghZId/jB6MwIg5ocIMl6gQk\nugH6UmekZhmo/8JbZwOkExhK5RWDTaJZzo6IXm7qQBijbVqxKHNPI6u/U4e4LZFp\nyIWlxbnOy2yD73EmLDqfk8J/MgF6qFN0GopPw2lSmhzAj0f8ECJZpQEhOKdFi5q+\nlX4V8Du0Eikvo3Oh3J/O9oDaZV/XR/Usol8Cz6xlm2P3livU/tJ/EcEUiG6piqSZ\nvHSONsqrEAYD35K5DkouUbJl44o5mU/V5EmhZ+TlxQKBgQD7EeqVh2C5qUNmXKc1\nBRYyxUf6Nr0qydMPD/CwOVPVrkVHesT/sTaT1YjzpvagAUixiDUGNpqes5Er144/\nhdSUxSviBTU2bhz3mmXHLyJfCZdf469pKQL4uam0/nUT/WGLaLvJZuxYSb9Ao7sG\nm0JnJ8b2QXCHLmmAJLZicYZkhQKBgQDCNLyCPEeuwmI0OfKCZmneVZSauSf02m9s\nDgsPez8izZCzmaKr7IONj54JicOqodzUNwyogL8S6GaTP/Gid0Yce/lRk1PpNsQb\nJR6iBvn5JcAiUiqKaG3kRJA2KxSgakZBTFU6zzcvHatxVzXEiRqBJXCdA297iN3R\n+Fzhap0a5QKBgAon6GBSEJSSBzrtxom7gfFdz5KMgkxny5TRZUALoZuEKCNDERLy\nvS1vttF8UH+abbFYvCRbMxf2VYn7dzKUnEvESgkjgsqH274cTb+n5XEIt0nWsPLF\nCOy8veOnY18Cod58xxPXiPntScI4nUkgIKiBkGfHr+CX/QaE9ae3xeLtAoGBAIeK\nnvaWc8E40al5uBPivoj6WdkS2Rw/R/y2YGnRruLvbcqrs6kiTT6Dud0WVYXFqoZC\nVYdVNAZSRSUIP/EQJdLDg+K3XJ0sJ/p6EcMr81M8UbiieCZZdDkY0T29G4xKH/Z6\n/BErhmxP3NQh9djRh7oTE2HCgBBMGeTt3oVFD5kxAoGAMBt/Jih6fwi4WdvUTaf3\n3+byCn0ywnnnLjmPEbOMU456/rCjp728ZnQexPsfNXWZJMAlYKMS0eDOp0mNvUSU\n2IpVZ/ZZIxAUFZJxZguhncp3oSmpaaNkGShC3XAFTltj/chVImXD0Tdy3lMGKJjm\n6Q+rEL5H/0kIDU7+2ThtFXE=\n-----END PRIVATE KEY-----\n",
+  "client_email": "doccy-bot@doccy-215702.iam.gserviceaccount.com",
+  "client_id": "114531065805530066734",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/doccy-bot%40doccy-215702.iam.gserviceaccount.com"
+}

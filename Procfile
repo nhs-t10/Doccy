@@ -1,1 +1,1 @@
-worker: python Doccy/doccy.py
+worker: python doccy.py
