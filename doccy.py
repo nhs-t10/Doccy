@@ -77,7 +77,7 @@ def parse_bot_commands(slack_events):
         if event["type"] == "message" and not "subtype" in event:
             # Check to see if the channel is indeed a docbot channel, or if the text says
             # register.
-            if check_if_there(event['channel']) or event['text'].lower() == "register":
+            if MENTION_REGEX not in event['text']:
                 message = event['text']
                 return message, event["channel"], event['ts']
             # Check if someone mentions Doccy with @Doccy
@@ -138,7 +138,7 @@ def handle_command(command, channel, user, time):
         elif command.endswith(TESTCMD):
             response = "Hello there, {}.".format(user)
         # Registration
-        elif command.startswith("register") or command.startswith("Register"):
+        elif command.lower().startswith("register"):
             if check_if_there(user):
                 response = "You're already registered! Get documenting!"
             else:
