@@ -13,6 +13,7 @@ import urllib.request
 import os
 import sys
 import datetime
+import random
 
 # Constants and Sheets
 scope = ['https://spreadsheets.google.com/feeds',
@@ -222,10 +223,37 @@ def annoy_all():
                  "Pleasure to meet you! Tell me what you did during our last meeting!",
                  i['id'])
 
+def handle_convo(text,channel,user):
+    '''
+    Takes input of a conversation, returns a response
+    :param text:
+    :return: None, response
+    '''
+    response = 'foo bar'
+    greetings = ['hello','hi','sup','hey']
+    goodbyes = ['bye','peace','latah','adios']
+    swears = ['fuck', 'piss', 'shit', 'cunt', 'ass', 'crap']
+    question_responses = ['Sorry, I\'m just a robot. You should ask Mr. Batra about that.',
+                          'Ask Davis, he\'s your project manager!', 'No.','Yes','Of course!',
+                          'Ask Shaashwat!']
+    random_responses = ['Oh, that\'s pretty neat!','What was that?','Ok, cool.','Beep boop.']
+    if text in greetings:
+        response = 'Oh, hey there {}'.format(user)
+    elif text in goodbyes:
+        response = 'See you later, {}'.format(user)
+    elif text in swears:
+        response = 'Hey, no need to use that kind of language!'
+    elif '?' in text:
+        response = random.choice(question_responses)
+    else:
+        response = random.choice(random_responses)
+    send(response,channel)
 
 if __name__ == "__main__":
     if slack_client.rtm_connect(with_team_state=False):
         print("Doccy Bot connected and running!")
+        print('Current time: {}').format(convert_ts_to_date(time.time(),'time'))
+        print('All systems go!')
         doccybot_id = slack_client.api_call("auth.test")["user_id"]
         curruser_id = "member"
         with open('members.txt') as members:
@@ -238,11 +266,12 @@ if __name__ == "__main__":
                     for i in data['members']:
                         if i['id'] == curruser_id:
                             currname = i['profile']['real_name']
-                            handle_command(command, channel, currname, currtime)
-                            if len(command) > 20:
-                                print(currname, "said",command[:20]+"...","in",channel)
+                            if len(command) < 25:
+                                handle_convo(command, channel, currname)
+                                print(currname, "said", command + "...", "in", channel)
                             else:
-                                print(currname, "said", command, "in", channel)
+                                handle_command(command, channel, currname, currtime)
+                                print(currname, "said", command[:25] + "...", "in", channel)
                 # If it is 8:00 on any given day
                 if convert_ts_to_date(time.time(), "time") == "19-50-00":
                     print("It's time!")
