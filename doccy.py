@@ -251,7 +251,7 @@ def handle_convo(text,channel,user):
         elif text in thanks:
             response = 'You\'re welcome, {}'.format(user)
         elif 'flip a coin' in text:
-            response = "The coin came up {}!".format(random.choice['heads','tails'])
+            response = "The coin came up {}!".format(random.choice(['heads','tails']))
         else:
             response = random.choice(random_responses)
     elif 'register' in text:
