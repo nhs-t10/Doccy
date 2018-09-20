@@ -252,7 +252,7 @@ def handle_convo(text,channel,user):
 if __name__ == "__main__":
     if slack_client.rtm_connect(with_team_state=False):
         print("Doccy Bot connected and running!")
-        print('Current time: {}').format(convert_ts_to_date(time.time(),'time'))
+        print('Current time: {}'.format(convert_ts_to_date(time.time(),'time')))
         print('All systems go!')
         doccybot_id = slack_client.api_call("auth.test")["user_id"]
         curruser_id = "member"
