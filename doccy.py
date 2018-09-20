@@ -259,6 +259,8 @@ def handle_convo(text,channel,user):
             new_line = [user, channel]
             reg.append_row(new_line)
             response = "Thank you for registering, {}!".format(user)
+    else:
+        response = 'You aren\'t registered yet! To register, please type \'register\'.'
     send(response,channel)
 
 if __name__ == "__main__":
