@@ -239,18 +239,26 @@ def handle_convo(text,channel,user):
                           'Ask Shaashwat!']
     random_responses = ['Oh, that\'s pretty neat!','What was that?','Ok, cool.','Beep boop.']
     text = text.lower()
-    if text in greetings:
-        response = 'Oh, hey there {}'.format(user)
-    elif text in goodbyes:
-        response = 'See you later, {}'.format(user)
-    elif text in swears:
-        response = 'Hey, no need to use that kind of language!'
-    elif '?' in text:
-        response = random.choice(question_responses)
-    elif text in thanks:
-        response = 'You\'re welcome, {}'.format(user)
-    else:
-        response = random.choice(random_responses)
+    if check_if_there(user):
+        if text in greetings:
+            response = 'Oh, hey there {}'.format(user)
+        elif text in goodbyes:
+            response = 'See you later, {}'.format(user)
+        elif text in swears:
+            response = 'Hey, no need to use that kind of language!'
+        elif '?' in text:
+            response = random.choice(question_responses)
+        elif text in thanks:
+            response = 'You\'re welcome, {}'.format(user)
+        else:
+            response = random.choice(random_responses)
+    elif 'register' in text:
+        if check_if_there(user):
+            response = "You're already registered! Get documenting!"
+        else:
+            new_line = [user, channel]
+            reg.append_row(new_line)
+            response = "Thank you for registering, {}!".format(user)
     send(response,channel)
 
 if __name__ == "__main__":
