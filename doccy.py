@@ -149,8 +149,8 @@ def handle_command(command, channel, user, time):
         else:
             response = "Thanks for documenting, {}!".format(user)
             public_message = command.split("#")[0] + " -" + user
-            if '#' in command:
-                new_row = [command.split('#')[1][:-3], public_message, date]
+            if '-c ' in command:
+                new_row = [command.split('-c ')[1], public_message, date]
             else:
                 new_row = ['Other', public_message,date]
             docs.append_row(new_row)
