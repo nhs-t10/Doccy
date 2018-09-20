@@ -132,20 +132,20 @@ def handle_command(command, channel, user, time):
     # Get current date from ts object
     date = convert_ts_to_date(time, "date")
 
-    if check_if_there(user) or command.lower() == "register":
+    if check_if_there(user):
         # If statements are similar, they add to a cell depending on what is being documented.
         if command.startswith(HELLOCMD):
             response = "Why hello!"
         elif command.endswith(TESTCMD):
             response = "Hello there, {}.".format(user)
         # Registration
-        elif command.lower().startswith("register"):
-            if check_if_there(user):
-                response = "You're already registered! Get documenting!"
-            else:
-                new_line = [user, channel]
-                reg.append_row(new_line)
-                response = "Thank you for registering, {}!".format(user)
+        # elif command.lower().startswith("register"):
+        #     if check_if_there(user):
+        #         response = "You're already registered! Get documenting!"
+        #     else:
+        #         new_line = [user, channel]
+        #         reg.append_row(new_line)
+        #         response = "Thank you for registering, {}!".format(user)
         else:
             response = "Thanks for documenting, {}!".format(user)
             if '-c ' in command:
@@ -153,7 +153,7 @@ def handle_command(command, channel, user, time):
                 new_row = [command.split('-c ')[1], public_message, date]
             else:
                 new_row = ['Other', command,date]
-            docs.append_row(new_row)
+                docs.append_row(new_row)
 
         # Sends the response back to the channel
         send(response, channel)
@@ -250,6 +250,8 @@ def handle_convo(text,channel,user):
             response = random.choice(question_responses)
         elif text in thanks:
             response = 'You\'re welcome, {}'.format(user)
+        elif 'flip a coin' in text:
+            response = "The coin came up {}!".format(random.choice['heads','tails'])
         else:
             response = random.choice(random_responses)
     elif 'register' in text:
