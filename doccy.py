@@ -270,14 +270,14 @@ if __name__ == "__main__":
                     for i in data['members']:
                         if i['id'] == curruser_id:
                             currname = i['profile']['real_name']
-                            if len(command) < 25:
+                            if len(command) < 40:
                                 handle_convo(command, channel, currname)
-                                print(currname, "said", command + "...", "in", channel)
+                                print(currname, "said", command[:20] + "...", "in", channel)
                             else:
                                 handle_command(command, channel, currname, currtime)
-                                print(currname, "said", command[:25] + "...", "in", channel)
-                # If it is 8:00 on any given day
-                if convert_ts_to_date(time.time(), "time") == "19-50-00":
+                                print(currname, "said", command[:20] + "...", "in", channel)
+                # If it is 8:00 on any given day (doccy is 4 hours ahead)
+                if convert_ts_to_date(time.time(), "time") == "23-50-00":
                     print("It's time!")
                     # If it is a meeting date, then check who needs to document.
                     for i in range(0, len(days)):
