@@ -148,11 +148,11 @@ def handle_command(command, channel, user, time):
                 response = "Thank you for registering, {}!".format(user)
         else:
             response = "Thanks for documenting, {}!".format(user)
-            public_message = command.split("#")[0] + " -" + user
             if '-c ' in command:
+                public_message = command.split("-c ")[0] + " -" + user
                 new_row = [command.split('-c ')[1], public_message, date]
             else:
-                new_row = ['Other', public_message,date]
+                new_row = ['Other', command,date]
             docs.append_row(new_row)
 
         # Sends the response back to the channel
