@@ -233,10 +233,12 @@ def handle_convo(text,channel,user):
     greetings = ['hello','hi','sup','hey']
     goodbyes = ['bye','peace','latah','adios']
     swears = ['fuck', 'piss', 'shit', 'cunt', 'ass', 'crap']
+    thanks = ['thanks!','thank you!','ty']
     question_responses = ['Sorry, I\'m just a robot. You should ask Mr. Batra about that.',
                           'Ask Davis, he\'s your project manager!', 'No.','Yes','Of course!',
                           'Ask Shaashwat!']
     random_responses = ['Oh, that\'s pretty neat!','What was that?','Ok, cool.','Beep boop.']
+    text = text.lower()
     if text in greetings:
         response = 'Oh, hey there {}'.format(user)
     elif text in goodbyes:
@@ -245,6 +247,8 @@ def handle_convo(text,channel,user):
         response = 'Hey, no need to use that kind of language!'
     elif '?' in text:
         response = random.choice(question_responses)
+    elif text in thanks:
+        response = 'You\'re welcome, {}'.format(user)
     else:
         response = random.choice(random_responses)
     send(response,channel)
