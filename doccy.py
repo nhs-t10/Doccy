@@ -47,7 +47,7 @@ OTHCMD = "#other"
 HELLOCMD = "hello"
 TESTCMD = "test"
 MENTION_REGEX = "^<@(|[WU].+?)>(.*)"
-admin_phrases = ['Who documented?']
+admin_phrases = ['check-who']
 
 #Boolean that is set for documentation vs conversationality. Assumes everything is documentation.
 is_documentation = True
