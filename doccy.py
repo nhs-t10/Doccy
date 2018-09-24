@@ -259,7 +259,7 @@ def handle_convo(text,channel,user):
             elif text == admin_phrases[1]:
                 index = docs.row_count
                 row = docs.row_values(index)
-                response = str(row)
+                response = "The last documentation was \'{}\' on {}".format(row[1],row[0])
         elif text in greetings:
             response = 'Oh, hey there {}'.format(user)
         elif text in goodbyes:
