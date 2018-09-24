@@ -248,8 +248,6 @@ def handle_convo(text,channel,user):
             response = 'See you later, {}'.format(user)
         elif text in swears:
             response = 'Hey, no need to use that kind of language!'
-        elif '?' in text:
-            response = random.choice(question_responses)
         elif text in thanks:
             response = 'You\'re welcome, {}'.format(user)
         elif 'flip a coin' in text:
@@ -267,6 +265,8 @@ def handle_convo(text,channel,user):
                             convert_ts_to_date(im_hist['messages'][0]['ts'], "day")) == 0):
                         people.append(user)
             response = "The following people have documented: {}".format(",".join(people))
+        elif '?' in text:
+            response = random.choice(question_responses)
         else:
             response = random.choice(random_responses)
     elif 'register' in text:
