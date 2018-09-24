@@ -218,7 +218,8 @@ def announce(msg):
     Announces something from Doccy into a channel on slack
     :return: None
     '''
-    send(msg,'DCQ5XBUCF')
+    string = '@here {}'.format(msg)
+    send(string,'#t-10')
 
 
 def handle_convo(text,channel,user):
@@ -256,9 +257,9 @@ def handle_convo(text,channel,user):
             row = docs.row_values(index)
             response = "The last documentation was \'{}\' on {}".format(row[1],row[2])
         elif admin_phrases[2] in text:
-            message = text.split(':')[1]
+            message = text.split(': ')[1]
             announce(message)
-            response = "I send {} to #general!".format(message)
+            response = "I sent {} to #general!".format(message)
         elif any(match in text for match in greetings):
             response = 'Oh, hey there {}'.format(user)
         elif any(match in text for match in goodbyes):
