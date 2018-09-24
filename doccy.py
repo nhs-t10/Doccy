@@ -238,35 +238,34 @@ def handle_convo(text,channel,user):
     random_responses = ['Oh, that\'s pretty neat!','What was that?','Ok, cool.','Beep boop.']
     text = text.lower()
     if check_if_there(user):
-        if text in admin_phrases:
-            if text == admin_phrases[0]:
-                people = []
-                doccy_list = toJson("https://slack.com/api/im.list?token=" + slack_token + "&pretty=1")
-                im_list = doccy_list['ims']
-                for i in im_list:
-                    im_hist = toJson(
-                        "https://slack.com/api/im.history?token=" + slack_token + "&channel=" + i['id']
-                        + "&pretty=1")
-                    if (check_if_there(i['id'])):
-                        if(int(convert_ts_to_date(time.time(), "day")) - int(
-                                convert_ts_to_date(im_hist['messages'][0]['ts'], "day")) == 0):
-                            people.append(user)
-                response = "The following people have documented: {}".format(",".join(people))
-            elif text == admin_phrases[1]:
-                index = docs.row_count
-                row = docs.row_values(index)
-                response = "The last documentation was \'{}\' on {}".format(row[1],row[2])
-            elif admin_phrases[2] in text:
-                message = text.split(':')[1]
-                announce(message)
-                response = "I send {} to #general!".format(message)
-        elif text in greetings:
+        if text == admin_phrases[0]:
+            people = []
+            doccy_list = toJson("https://slack.com/api/im.list?token=" + slack_token + "&pretty=1")
+            im_list = doccy_list['ims']
+            for i in im_list:
+                im_hist = toJson(
+                    "https://slack.com/api/im.history?token=" + slack_token + "&channel=" + i['id']
+                    + "&pretty=1")
+                if (check_if_there(i['id'])):
+                    if(int(convert_ts_to_date(time.time(), "day")) - int(
+                            convert_ts_to_date(im_hist['messages'][0]['ts'], "day")) == 0):
+                        people.append(user)
+            response = "The following people have documented: {}".format(",".join(people))
+        elif text == admin_phrases[1]:
+            index = docs.row_count
+            row = docs.row_values(index)
+            response = "The last documentation was \'{}\' on {}".format(row[1],row[2])
+        elif admin_phrases[2] in text:
+            message = text.split(':')[1]
+            announce(message)
+            response = "I send {} to #general!".format(message)
+        elif any(match in text for match in greetings):
             response = 'Oh, hey there {}'.format(user)
-        elif text in goodbyes:
+        elif any(match in text for match in goodbyes):
             response = 'See you later, {}'.format(user)
-        elif text in swears:
+        elif any(match in text for match in swears):
             response = 'Hey, no need to use that kind of language!'
-        elif text in thanks:
+        elif any(match in text for match in thanks):
             response = 'You\'re welcome, {}'.format(user)
         elif 'flip a coin' in text:
             response = "The coin came up {}!".format(random.choice(['heads','tails']))
