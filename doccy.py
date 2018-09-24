@@ -8,10 +8,7 @@ from slackclient import SlackClient
 import API_KEYS
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
-import datetime
 import urllib.request
-import os
-import sys
 import datetime
 import random
 
@@ -30,10 +27,9 @@ slack_client = SlackClient(slack_token)
 # Sheets instances
 
 # Documentation Feed
-
-# Registered Users
 docs = gc.open("Documentation Feed 2018").sheet1
 
+# Registered Users
 reg = gc.open("Registered").sheet1
 
 sched = gc.open("Upcoming Robotics Events and Meetings 2018").sheet1
@@ -47,7 +43,7 @@ OTHCMD = "#other"
 HELLOCMD = "hello"
 TESTCMD = "test"
 MENTION_REGEX = "^<@(|[WU].+?)>(.*)"
-admin_phrases = ['check-who','get-latest']
+admin_phrases = ['check-who','get-latest','announce:']
 
 #Boolean that is set for documentation vs conversationality. Assumes everything is documentation.
 is_documentation = True
@@ -139,14 +135,6 @@ def handle_command(command, channel, user, time):
             response = "Why hello!"
         elif command.endswith(TESTCMD):
             response = "Hello there, {}.".format(user)
-        # Registration
-        # elif command.lower().startswith("register"):
-        #     if check_if_there(user):
-        #         response = "You're already registered! Get documenting!"
-        #     else:
-        #         new_line = [user, channel]
-        #         reg.append_row(new_line)
-        #         response = "Thank you for registering, {}!".format(user)
         else:
             response = "Thanks for documenting, {}!".format(user)
             if '-c ' in command:
@@ -225,6 +213,14 @@ def annoy_all():
                  "Pleasure to meet you! Tell me what you did during our last meeting!",
                  i['id'])
 
+def announce(msg):
+    '''
+    Announces something from Doccy into a channel on slack
+    :return: None
+    '''
+    send(msg,'DCQ5XBUCF')
+
+
 def handle_convo(text,channel,user):
     '''
     Takes input of a conversation, returns a response
@@ -260,6 +256,10 @@ def handle_convo(text,channel,user):
                 index = docs.row_count
                 row = docs.row_values(index)
                 response = "The last documentation was \'{}\' on {}".format(row[1],row[2])
+            elif text == admin_phrases[2]:
+                message = text.split(':')[1]
+                announce(message)
+                response = "I send {} to #general!".format(message)
         elif text in greetings:
             response = 'Oh, hey there {}'.format(user)
         elif text in goodbyes:
@@ -310,22 +310,18 @@ if __name__ == "__main__":
                                 print(currname, "said", command[:20] + "...", "in", channel)
                 # If it is 8:00 on any given day (doccy is 4 hours ahead)
                 if convert_ts_to_date(time.time(), "time") == "23-50-00":
-                    print("It's time!")
+                    # print("It's time!")
                     # If it is a meeting date, then check who needs to document.
                     for i in range(0, len(days)):
                         if convert_ts_to_date(time.time(), "date") == days[i]["Date"] and \
                                         days[i]['Event'] == "Meeting":
                             print(convert_ts_to_date(time.time(), "date"),"is a meeting day!")
-                            annoy_all()
-                            print("I annoyed people!")
-                # Restart the script every half hour
-#                if int(convert_ts_to_date(time.time(), "minute")) - int(sys_time_min) == 30:
-#                    print("Restarting...")
-#                    os.execv(__file__,sys.argv)
+                            try:
+                                annoy_all()
+                                print("I annoyed people today!")
+                            except Exception as e:
+                                print("I tried to annoy people, but I encountered {}".format(e))
                 # Wait one second between all event handling
                 time.sleep(1)
     else:
         print("Connection failed.")
-
-# Need to add conversationality
-# Allow Doccy to talk to people for documentation, rather than the channel to only be used for documentation
