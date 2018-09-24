@@ -47,6 +47,7 @@ OTHCMD = "#other"
 HELLOCMD = "hello"
 TESTCMD = "test"
 MENTION_REGEX = "^<@(|[WU].+?)>(.*)"
+admin_phrases = ['Who documented?']
 
 #Boolean that is set for documentation vs conversationality. Assumes everything is documentation.
 is_documentation = True
@@ -204,19 +205,20 @@ def annoy_all():
             "https://slack.com/api/im.history?token="+slack_token+"&channel=" + i['id']
             + "&pretty=1")
         try:
-            if int(convert_ts_to_date(time.time(), "day")) - int(
-                    convert_ts_to_date(im_hist['messages'][0]['ts'], "day")) >= 2:
-                send("Sorry, it looks like you haven't documented in the last two days. "
-                     "Tell me what you did during the last meeting!",
-                     i['id'])
-            elif int(convert_ts_to_date(time.time(), "day")) - int(
-                    convert_ts_to_date(im_hist['messages'][0]['ts'], "day")) == 0:
-                send("Thank you for documenting today!",
-                     i['id'])
-            elif int(convert_ts_to_date(time.time(), "day")) - int(
-                    convert_ts_to_date(im_hist['messages'][0]['ts'], "day")) == 1:
-                send("It looks like you documented yesterday, but tell me more about what you did today!",
-                     i['id'])
+            if(check_if_there(i['id'])):
+                if int(convert_ts_to_date(time.time(), "day")) - int(
+                        convert_ts_to_date(im_hist['messages'][0]['ts'], "day")) >= 2:
+                    send("Sorry, it looks like you haven't documented in the last two days. "
+                         "Tell me what you did during the last meeting!",
+                         i['id'])
+                elif int(convert_ts_to_date(time.time(), "day")) - int(
+                        convert_ts_to_date(im_hist['messages'][0]['ts'], "day")) == 0:
+                    send("Thank you for documenting today!",
+                         i['id'])
+                elif int(convert_ts_to_date(time.time(), "day")) - int(
+                        convert_ts_to_date(im_hist['messages'][0]['ts'], "day")) == 1:
+                    send("It looks like you documented yesterday, but tell me more about what you did today!",
+                         i['id'])
         except IndexError:
             send("It looks like you haven't spoken to me in a while, which means you haven't "
                  "documented either. "
@@ -252,6 +254,19 @@ def handle_convo(text,channel,user):
             response = 'You\'re welcome, {}'.format(user)
         elif 'flip a coin' in text:
             response = "The coin came up {}!".format(random.choice(['heads','tails']))
+        elif text in admin_phrases:
+            people = []
+            doccy_list = toJson("https://slack.com/api/im.list?token=" + slack_token + "&pretty=1")
+            im_list = doccy_list['ims']
+            for i in im_list:
+                im_hist = toJson(
+                    "https://slack.com/api/im.history?token=" + slack_token + "&channel=" + i['id']
+                    + "&pretty=1")
+                if (check_if_there(i['id'])):
+                    if(int(convert_ts_to_date(time.time(), "day")) - int(
+                            convert_ts_to_date(im_hist['messages'][0]['ts'], "day")) == 0):
+                        people.append(user)
+            response = "The following people have documented: {}".format(",".join(people))
         else:
             response = random.choice(random_responses)
     elif 'register' in text:
@@ -282,7 +297,7 @@ if __name__ == "__main__":
                     for i in data['members']:
                         if i['id'] == curruser_id:
                             currname = i['profile']['real_name']
-                            if len(command) < 40:
+                            if len(command) < 40 or '-nd' in command:
                                 handle_convo(command, channel, currname)
                                 print(currname, "said", command[:20] + "...", "in", channel)
                             else:
