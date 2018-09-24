@@ -257,7 +257,7 @@ def handle_convo(text,channel,user):
             row = docs.row_values(index)
             response = "The last documentation was \'{}\' on {}".format(row[1],row[2])
         elif admin_phrases[2] in text:
-            message = text.split(': ')[1]
+            message = (text.split(': ')[1]).split('-nd')[0]
             announce(message)
             response = "I sent {} to #general!".format(message)
         elif any(match in text for match in greetings):
