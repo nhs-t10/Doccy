@@ -47,7 +47,7 @@ OTHCMD = "#other"
 HELLOCMD = "hello"
 TESTCMD = "test"
 MENTION_REGEX = "^<@(|[WU].+?)>(.*)"
-admin_phrases = ['check-who']
+admin_phrases = ['check-who','get-latest']
 
 #Boolean that is set for documentation vs conversationality. Assumes everything is documentation.
 is_documentation = True
@@ -243,18 +243,23 @@ def handle_convo(text,channel,user):
     text = text.lower()
     if check_if_there(user):
         if text in admin_phrases:
-            people = []
-            doccy_list = toJson("https://slack.com/api/im.list?token=" + slack_token + "&pretty=1")
-            im_list = doccy_list['ims']
-            for i in im_list:
-                im_hist = toJson(
-                    "https://slack.com/api/im.history?token=" + slack_token + "&channel=" + i['id']
-                    + "&pretty=1")
-                if (check_if_there(i['id'])):
-                    if(int(convert_ts_to_date(time.time(), "day")) - int(
-                            convert_ts_to_date(im_hist['messages'][0]['ts'], "day")) == 0):
-                        people.append(user)
-            response = "The following people have documented: {}".format(",".join(people))
+            if text == admin_phrases[0]:
+                people = []
+                doccy_list = toJson("https://slack.com/api/im.list?token=" + slack_token + "&pretty=1")
+                im_list = doccy_list['ims']
+                for i in im_list:
+                    im_hist = toJson(
+                        "https://slack.com/api/im.history?token=" + slack_token + "&channel=" + i['id']
+                        + "&pretty=1")
+                    if (check_if_there(i['id'])):
+                        if(int(convert_ts_to_date(time.time(), "day")) - int(
+                                convert_ts_to_date(im_hist['messages'][0]['ts'], "day")) == 0):
+                            people.append(user)
+                response = "The following people have documented: {}".format(",".join(people))
+            elif text == admin_phrases[1]:
+                index = 0
+                row = docs.row_values(index)
+                response = str(row)
         elif text in greetings:
             response = 'Oh, hey there {}'.format(user)
         elif text in goodbyes:
