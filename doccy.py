@@ -257,7 +257,7 @@ def handle_convo(text,channel,user):
                             people.append(user)
                 response = "The following people have documented: {}".format(",".join(people))
             elif text == admin_phrases[1]:
-                index = 1
+                index = docs.row_count+1
                 row = docs.row_values(index)
                 response = str(row)
         elif text in greetings:
