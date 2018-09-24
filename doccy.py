@@ -242,17 +242,7 @@ def handle_convo(text,channel,user):
     random_responses = ['Oh, that\'s pretty neat!','What was that?','Ok, cool.','Beep boop.']
     text = text.lower()
     if check_if_there(user):
-        if text in greetings:
-            response = 'Oh, hey there {}'.format(user)
-        elif text in goodbyes:
-            response = 'See you later, {}'.format(user)
-        elif text in swears:
-            response = 'Hey, no need to use that kind of language!'
-        elif text in thanks:
-            response = 'You\'re welcome, {}'.format(user)
-        elif 'flip a coin' in text:
-            response = "The coin came up {}!".format(random.choice(['heads','tails']))
-        elif text in admin_phrases:
+        if text in admin_phrases:
             people = []
             doccy_list = toJson("https://slack.com/api/im.list?token=" + slack_token + "&pretty=1")
             im_list = doccy_list['ims']
@@ -265,6 +255,16 @@ def handle_convo(text,channel,user):
                             convert_ts_to_date(im_hist['messages'][0]['ts'], "day")) == 0):
                         people.append(user)
             response = "The following people have documented: {}".format(",".join(people))
+        elif text in greetings:
+            response = 'Oh, hey there {}'.format(user)
+        elif text in goodbyes:
+            response = 'See you later, {}'.format(user)
+        elif text in swears:
+            response = 'Hey, no need to use that kind of language!'
+        elif text in thanks:
+            response = 'You\'re welcome, {}'.format(user)
+        elif 'flip a coin' in text:
+            response = "The coin came up {}!".format(random.choice(['heads','tails']))
         elif '?' in text:
             response = random.choice(question_responses)
         else:
