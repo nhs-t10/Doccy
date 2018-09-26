@@ -141,7 +141,8 @@ def handle_command(command, channel, user, time):
                 public_message = command.split("-c ")[0] + " -" + user
                 new_row = [command.split('-c ')[1], public_message, date]
             else:
-                new_row = ['Other', command,date]
+                public_message = command + " -" + user
+                new_row = ['Other', public_message,date]
             docs.append_row(new_row)
 
         # Sends the response back to the channel
