@@ -11,6 +11,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 import urllib.request
 import datetime
 import random
+from datetime import timedelta
 
 # Constants and Sheets
 scope = ['https://spreadsheets.google.com/feeds',
@@ -32,6 +33,7 @@ docs = gc.open("Documentation Feed 2018").sheet1
 # Registered Users
 reg = gc.open("Registered").sheet1
 
+#Scheduled Meeting Days
 sched = gc.open("Upcoming Robotics Events and Meetings 2018").sheet1
 days = sched.get_all_records()
 
@@ -61,6 +63,31 @@ def send(msg, chn):
         channel=chn,
         text=msg
 )
+
+def check_if_there(instance):
+    '''
+    Checks to see if a user is registered, or if a channel is identified.
+
+    :param name or channel instance
+    :return: boolean
+    '''
+    try:
+        reg.find(instance)
+        return True
+
+    except:
+        return False
+
+def toJson(url):
+    '''
+    Turns any slack api call from url into json object
+
+    :param url:
+    :return: JSON Object from the resulting url
+    '''
+    obj = urllib.request.urlopen(url).read()
+    json_obj = json.loads(obj.decode('utf-8'))
+    return json_obj
 
 # Function to parse bot commands
 def parse_bot_commands(slack_events):
@@ -108,11 +135,7 @@ def convert_ts_to_date(ts, type):
     elif type == "minute":
         return datetime.datetime.fromtimestamp(int(float(ts))).strftime('%M')
 
-
-# Hour value of instantiation, so that the script can restart itself to avoid lost documentation.
-sys_time_min = convert_ts_to_date(time.time(), "minute")
-
-def handle_command(command, channel, user, time):
+def handle_documentation(command, channel, user, time):
     '''
     Handles commands from the user, provides different responses based on the name
 
@@ -150,31 +173,6 @@ def handle_command(command, channel, user, time):
 
     else:
         send("You haven't registered yet! To do so, please type 'register'.", channel)
-
-def check_if_there(instance):
-    '''
-    Checks to see if a user is registered, or if a channel is identified.
-
-    :param name or channel instance
-    :return: boolean
-    '''
-    try:
-        reg.find(instance)
-        return True
-
-    except:
-        return False
-
-def toJson(url):
-    '''
-    Turns any slack api call from url into json object
-
-    :param url:
-    :return: JSON Object from the resulting url
-    '''
-    obj = urllib.request.urlopen(url).read()
-    json_obj = json.loads(obj.decode('utf-8'))
-    return json_obj
 
 def annoy_all():
     '''
@@ -222,6 +220,13 @@ def announce(msg):
     string = '@here {}'.format(msg)
     send(string,'#t-10')
 
+def id_to_name(id):
+    with open('members.txt') as mem_list:
+        listopeep = json.load(mem_list)
+        for i in listopeep['members']:
+            if i['id'] == id:
+                return i['profile']['real_name']
+
 
 def handle_convo(text,channel,user):
     '''
@@ -233,7 +238,7 @@ def handle_convo(text,channel,user):
     greetings = ['hello','hi','sup','hey']
     goodbyes = ['bye','peace','latah','adios']
     swears = ['fuck', 'piss', 'shit', 'cunt', 'ass', 'crap']
-    thanks = ['thanks!','thank you!','ty']
+    thanks = ['thanks!','thank you!','ty','thanks']
     question_responses = ['Sorry, I\'m just a robot. You should ask Mr. Batra about that.',
                           'Ask Davis, he\'s your project manager!', 'No.','Yes','Of course!',
                           'Ask Shaashwat!']
@@ -248,15 +253,16 @@ def handle_convo(text,channel,user):
                 im_hist = toJson(
                     "https://slack.com/api/im.history?token=" + slack_token + "&channel=" + i['id']
                     + "&pretty=1")
-                if (check_if_there(i['id'])):
+                if(check_if_there(i['id'])):
                     if(int(convert_ts_to_date(time.time(), "day")) - int(
                             convert_ts_to_date(im_hist['messages'][0]['ts'], "day")) == 0):
-                        people.append(user)
+                        print(id_to_name(i['id']))
+                        people.append(id_to_name(i['id']))
             response = "The following people have documented: {}".format(",".join(people))
         elif text == admin_phrases[1]:
             index = docs.row_count
             row = docs.row_values(index)
-            response = "The last documentation was \'{}\' on {}".format(row[1],row[2])
+            response = "The last documentation was \"{}\" on {}".format(row[1],row[2])
         elif admin_phrases[2] in text:
             message = (text.split(': ')[1]).split('-nd')[0]
             announce(message)
@@ -307,11 +313,11 @@ if __name__ == "__main__":
                                 handle_convo(command, channel, currname)
                                 print(currname, "said", command[:20] + "...", "in", channel)
                             else:
-                                handle_command(command, channel, currname, currtime)
+                                handle_documentation(command, channel, currname, currtime)
                                 print(currname, "said", command[:20] + "...", "in", channel)
                 # If it is 8:00 on any given day (doccy is 4 hours ahead)
                 if convert_ts_to_date(time.time(), "time") == "23-50-00":
-                    # print("It's time!")
+                    print("It's time!")
                     # If it is a meeting date, then check who needs to document.
                     for i in range(0, len(days)):
                         if convert_ts_to_date(time.time(), "date") == days[i]["Date"] and \
