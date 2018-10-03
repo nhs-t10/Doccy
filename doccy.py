@@ -79,8 +79,8 @@ def check_if_there(instance):
     try:
         reg.find(instance)
         return True
-
-    except:
+    except Exception as e:
+        print(e)
         return False
 
 def toJson(url):
@@ -177,7 +177,7 @@ def handle_documentation(command, channel, user, time):
         send(response, channel)
 
     else:
-        send("You haven't registered yet! To do so, please type 'register'.", channel)
+        send("You haven't registered yet! To do so, please type \'register\'.", channel)
 
 def annoy_all():
     '''
