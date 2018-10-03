@@ -11,6 +11,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 import urllib.request
 import datetime
 import random
+import heroku3
 from datetime import timedelta
 
 # Constants and Sheets
@@ -36,6 +37,10 @@ reg = gc.open("Registered").sheet1
 #Scheduled Meeting Days
 sched = gc.open("Upcoming Robotics Events and Meetings 2018").sheet1
 days = sched.get_all_records()
+
+# Heroku API Client
+heroku_conn = heroku3.from_key('119be864-9d74-4722-803f-4e05a06da242')
+app = heroku_conn.apps()['young-caverns-32300']
 
 # more constants
 SFTCMD = "#softwaredoc"
@@ -232,7 +237,7 @@ def restart():
     Restart's Doccy, should he be need it
     :return:
     '''
-    raise Exception('Restarting...')
+    app.restart()
 
 
 def handle_convo(text,channel,user):
