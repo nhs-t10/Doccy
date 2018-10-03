@@ -232,8 +232,7 @@ def restart():
     Restart's Doccy, should he be need it
     :return:
     '''
-    print('Restarting...')
-    print(a).format('b')
+    raise Exception('Restarting...')
 
 
 def handle_convo(text,channel,user):
