@@ -292,8 +292,9 @@ def handle_convo(text,channel,user):
         elif '?' in text:
             response = random.choice(question_responses)
         elif text == 'restart':
-            restart()
             response = 'Restarting...'
+            print("Restart ordered by {}".format(user))
+            restart()
         else:
             response = random.choice(random_responses)
     elif 'register' in text:
