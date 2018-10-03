@@ -256,7 +256,11 @@ def handle_convo(text,channel,user):
                           'Ask Shaashwat!']
     random_responses = ['Oh, that\'s pretty neat!','What was that?','Ok, cool.','Beep boop.']
     text = text.lower()
-    if check_if_there(user):
+    if text == 'restart':
+        response = 'Restarting...'
+        print("Restart ordered by {}".format(user))
+        restart()
+    elif check_if_there(user):
         if text == admin_phrases[0]:
             people = []
             doccy_list = toJson("https://slack.com/api/im.list?token=" + slack_token + "&pretty=1")
@@ -291,10 +295,6 @@ def handle_convo(text,channel,user):
             response = "The coin came up {}!".format(random.choice(['heads','tails']))
         elif '?' in text:
             response = random.choice(question_responses)
-        elif text == 'restart':
-            response = 'Restarting...'
-            print("Restart ordered by {}".format(user))
-            restart()
         else:
             response = random.choice(random_responses)
     elif 'register' in text:
