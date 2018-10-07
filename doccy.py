@@ -28,11 +28,11 @@ slack_client = SlackClient(slack_token)
 
 # Sheets instances
 
-# Documentation Feed
-docs = gc.open("Documentation Feed 2018").sheet1
-
-# Registered Users
-reg = gc.open("Registered").sheet1
+# # Documentation Feed
+# docs = gc.open("Documentation Feed 2018").sheet1
+#
+# # Registered Users
+# reg = gc.open("Registered").sheet1
 
 #Scheduled Meeting Days
 sched = gc.open("Upcoming Robotics Events and Meetings 2018").sheet1
@@ -69,19 +69,19 @@ def send(msg, chn):
         text=msg
 )
 
-def check_if_there(instance):
-    '''
-    Checks to see if a user is registered, or if a channel is identified.
-
-    :param name or channel instance
-    :return: boolean
-    '''
-    try:
-        reg.find(instance)
-        return True
-    except Exception as e:
-        print(e)
-        return False
+# def check_if_there(instance):
+#     '''
+#     Checks to see if a user is registered, or if a channel is identified.
+#
+#     :param name or channel instance
+#     :return: boolean
+#     '''
+#     try:
+#         reg.find(instance)
+#         return True
+#     except Exception as e:
+#         print(e)
+#         return False
 
 def toJson(url):
     '''
@@ -149,6 +149,11 @@ def handle_documentation(command, channel, user, time):
     :param user:
     :return: Sends message to user via Bot
     '''
+    # Documentation Feed
+    docs = gc.open("Documentation Feed 2018").sheet1
+
+    # Registered Users
+    reg = gc.open("Registered").sheet1
     # Default response
     response = "Sorry, I didn't detect a documentation tag. Please add #softwaredoc, " \
                "#hardwaredoc, #outreachdoc or #other to the end of your message."
@@ -157,7 +162,8 @@ def handle_documentation(command, channel, user, time):
     # Get current date from ts object
     date = convert_ts_to_date(time, "date")
 
-    if check_if_there(user):
+    try:
+        reg.find(user)
         # If statements are similar, they add to a cell depending on what is being documented.
         if command.startswith(HELLOCMD):
             response = "Why hello!"
@@ -176,7 +182,7 @@ def handle_documentation(command, channel, user, time):
         # Sends the response back to the channel
         send(response, channel)
 
-    else:
+    except:
         send("You haven't registered yet! To do so, please type \'register\'.", channel)
 
 def annoy_all():
@@ -190,6 +196,8 @@ def annoy_all():
 
     :return: None, sends IM's to all of doccy's im channels.
     '''
+    # Registered Users
+    reg = gc.open("Registered").sheet1
     doccy_list = toJson("https://slack.com/api/im.list?token="+slack_token+"&pretty=1")
     im_list = doccy_list['ims']
     for i in im_list:
@@ -197,25 +205,27 @@ def annoy_all():
             "https://slack.com/api/im.history?token="+slack_token+"&channel=" + i['id']
             + "&pretty=1")
         try:
-            if(check_if_there(i['id'])):
-                if int(convert_ts_to_date(time.time(), "day")) - int(
-                        convert_ts_to_date(im_hist['messages'][0]['ts'], "day")) >= 2:
-                    send("Sorry, it looks like you haven't documented in the last two days. "
-                         "Tell me what you did during the last meeting!",
-                         i['id'])
-                elif int(convert_ts_to_date(time.time(), "day")) - int(
-                        convert_ts_to_date(im_hist['messages'][0]['ts'], "day")) == 0:
-                    send("Thank you for documenting today!",
-                         i['id'])
-                elif int(convert_ts_to_date(time.time(), "day")) - int(
-                        convert_ts_to_date(im_hist['messages'][0]['ts'], "day")) == 1:
-                    send("It looks like you documented yesterday, but tell me more about what you did today!",
-                         i['id'])
-        except IndexError:
-            send("It looks like you haven't spoken to me in a while, which means you haven't "
-                 "documented either. "
-                 "Pleasure to meet you! Tell me what you did during our last meeting!",
-                 i['id'])
+            reg.find(i['id'])
+            if int(convert_ts_to_date(time.time(), "day")) - int(
+                    convert_ts_to_date(im_hist['messages'][0]['ts'], "day")) >= 2:
+                send("Sorry, it looks like you haven't documented in the last two days. "
+                     "Tell me what you did during the last meeting!",
+                     i['id'])
+            elif int(convert_ts_to_date(time.time(), "day")) - int(
+                    convert_ts_to_date(im_hist['messages'][0]['ts'], "day")) == 0:
+                send("Thank you for documenting today!",
+                     i['id'])
+            elif int(convert_ts_to_date(time.time(), "day")) - int(
+                    convert_ts_to_date(im_hist['messages'][0]['ts'], "day")) == 1:
+                send("It looks like you documented yesterday, but tell me more about what you did today!",
+                     i['id'])
+        # except IndexError:
+        #     send("It looks like you haven't spoken to me in a while, which means you haven't "
+        #          "documented either. "
+        #          "Pleasure to meet you! Tell me what you did during our last meeting!",
+        #          i['id'])
+        except:
+            send("It looks like you aren't registered! To do so, please type, 'register'.", i['id'])
 
 def announce(msg):
     '''
@@ -246,6 +256,11 @@ def handle_convo(text,channel,user):
     :param text:
     :return: None, response
     '''
+    # Documentation Feed
+    docs = gc.open("Documentation Feed 2018").sheet1
+
+    # Registered Users
+    reg = gc.open("Registered").sheet1
     response = 'foo bar'
     greetings = ['hello','hi','sup','hey']
     goodbyes = ['bye','peace','latah','adios']
@@ -260,22 +275,23 @@ def handle_convo(text,channel,user):
         response = 'Restarting...'
         print("Restart ordered by {}".format(user))
         restart()
-    elif check_if_there(user):
-        if text == admin_phrases[0]:
-            people = []
-            doccy_list = toJson("https://slack.com/api/im.list?token=" + slack_token + "&pretty=1")
-            im_list = doccy_list['ims']
-            for i in im_list:
-                im_hist = toJson(
-                    "https://slack.com/api/im.history?token=" + slack_token + "&channel=" + i['id']
-                    + "&pretty=1")
-                if(check_if_there(i['id'])):
-                    if(int(convert_ts_to_date(time.time(), "day")) - int(
-                            convert_ts_to_date(im_hist['messages'][0]['ts'], "day")) == 0):
-                        print(id_to_name(i['id']))
-                        people.append(id_to_name(i['id']))
-            response = "The following people have documented: {}".format(",".join(people))
-        elif text == admin_phrases[1]:
+    try:
+        reg.find(user)
+        # if text == admin_phrases[0]:
+        #     people = []
+        #     doccy_list = toJson("https://slack.com/api/im.list?token=" + slack_token + "&pretty=1")
+        #     im_list = doccy_list['ims']
+        #     for i in im_list:
+        #         im_hist = toJson(
+        #             "https://slack.com/api/im.history?token=" + slack_token + "&channel=" + i['id']
+        #             + "&pretty=1")
+        #         if(check_if_there(i['id'])):
+        #             if(int(convert_ts_to_date(time.time(), "day")) - int(
+        #                     convert_ts_to_date(im_hist['messages'][0]['ts'], "day")) == 0):
+        #                 print(id_to_name(i['id']))
+        #                 people.append(id_to_name(i['id']))
+        #     response = "The following people have documented: {}".format(",".join(people))
+        if text == admin_phrases[1]:
             index = docs.row_count
             row = docs.row_values(index)
             response = "The last documentation was \"{}\" on {}".format(row[1],row[2])
@@ -297,15 +313,13 @@ def handle_convo(text,channel,user):
             response = random.choice(question_responses)
         else:
             response = random.choice(random_responses)
-    elif 'register' in text:
-        if check_if_there(user):
-            response = "You're already registered! Get documenting!"
-        else:
+    except:
+        if 'register' in text:
             new_line = [user, channel]
             reg.append_row(new_line)
             response = "Thank you for registering, {}!".format(user)
-    else:
-        response = 'You aren\'t registered yet! To register, please type \'register\'.'
+        else:
+            response = 'You aren\'t registered yet! To register, please type \'register\'.'
     send(response,channel)
 
 if __name__ == "__main__":
