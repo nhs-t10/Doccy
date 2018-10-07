@@ -311,6 +311,8 @@ def handle_convo(text,channel,user):
             response = "The coin came up {}!".format(random.choice(['heads','tails']))
         elif '?' in text:
             response = random.choice(question_responses)
+        elif 'register' in text:
+            response = "You're already registered! Get documenting!"
         else:
             response = random.choice(random_responses)
     except:
