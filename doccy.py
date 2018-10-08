@@ -20,7 +20,6 @@ scope = ['https://spreadsheets.google.com/feeds',
 # Google Sheet credentials
 credentials = ServiceAccountCredentials.from_json_keyfile_name('doccy-215702-bd6ad5890442.json', scope)
 # Google Sheets API Instance
-gc = gspread.authorize(credentials)
 
 # Slack Token (taken from python file for protection)
 slack_token = API_KEYS.slack_token
@@ -33,10 +32,6 @@ slack_client = SlackClient(slack_token)
 #
 # # Registered Users
 # reg = gc.open("Registered").sheet1
-
-#Scheduled Meeting Days
-sched = gc.open("Upcoming Robotics Events and Meetings 2018").sheet1
-days = sched.get_all_records()
 
 # Heroku API Client
 heroku_conn = heroku3.from_key('119be864-9d74-4722-803f-4e05a06da242')
@@ -150,6 +145,7 @@ def handle_documentation(command, channel, user, time):
     :return: Sends message to user via Bot
     '''
     # Documentation Feed
+    gc = gspread.authorize(credentials)
     docs = gc.open("Documentation Feed 2018").sheet1
 
     # Registered Users
@@ -197,6 +193,7 @@ def annoy_all():
     :return: None, sends IM's to all of doccy's im channels.
     '''
     # Registered Users
+    gc = gspread.authorize(credentials)
     reg = gc.open("Registered").sheet1
     doccy_list = toJson("https://slack.com/api/im.list?token="+slack_token+"&pretty=1")
     im_list = doccy_list['ims']
@@ -257,6 +254,7 @@ def handle_convo(text,channel,user):
     :return: None, response
     '''
     # Documentation Feed
+    gc = gspread.authorize(credentials)
     docs = gc.open("Documentation Feed 2018").sheet1
 
     # Registered Users
@@ -350,6 +348,9 @@ if __name__ == "__main__":
                 # If it is 8:00 on any given day (doccy is 4 hours ahead)
                 if convert_ts_to_date(time.time(), "time") == "23-50-00":
                     print("It's time!")
+                    gc = gspread.authorize(credentials)
+                    sched = gc.open("Upcoming Robotics Events and Meetings 2018").sheet1
+                    days = sched.get_all_records()
                     # If it is a meeting date, then check who needs to document.
                     for i in range(0, len(days)):
                         if convert_ts_to_date(time.time(), "date") == days[i]["Date"] and \
