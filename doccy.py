@@ -45,7 +45,7 @@ OTHCMD = "#other"
 HELLOCMD = "hello"
 TESTCMD = "test"
 MENTION_REGEX = "^<@(|[WU].+?)>(.*)"
-admin_phrases = ['check-who','get-latest','announce:']
+admin_phrases = ['check-who','get-latest','annoy-all']
 
 #Boolean that is set for documentation vs conversationality. Assumes everything is documentation.
 is_documentation = True
@@ -104,6 +104,10 @@ def parse_bot_commands(slack_events):
             # register.
             if MENTION_REGEX not in event['text']:
                 message = event['text']
+                file = event.get("files", None)
+                if file is not None:
+                    url_private = file['url_private']
+                    return message, event["channel"], event['ts'], url_private
                 return message, event["channel"], event['ts']
             # Check if someone mentions Doccy with @Doccy
             else:
@@ -111,6 +115,7 @@ def parse_bot_commands(slack_events):
                 if user_id == doccybot_id:
                     print(message, event['ts'])
                     return message, event["channel"], event['ts']
+
 
     return None, None, None
 
@@ -294,9 +299,8 @@ def handle_convo(text,channel,user):
             row = docs.row_values(index)
             response = "The last documentation was \"{}\" on {}".format(row[1],row[2])
         elif admin_phrases[2] in text:
-            message = (text.split(': ')[1]).split('-nd')[0]
-            announce(message)
-            response = "I sent {} to #general!".format(message)
+            annoy_all()
+            response = "I annoyed people!"
         elif any(match in text for match in greetings):
             response = 'Oh, hey there {}'.format(user)
         elif any(match in text for match in goodbyes):
@@ -334,6 +338,7 @@ if __name__ == "__main__":
             while True:
                 events = slack_client.rtm_read()
                 command, channel, currtime = parse_bot_commands(events)
+                print(events)
                 if command:
                     curruser_id = events[0]['user']
                     for i in data['members']:
