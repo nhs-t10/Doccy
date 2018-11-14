@@ -338,7 +338,7 @@ if __name__ == "__main__":
             while True:
                 events = slack_client.rtm_read()
                 command, channel, currtime = parse_bot_commands(events)
-                print(events)
+                # print(events)
                 if command:
                     curruser_id = events[0]['user']
                     for i in data['members']:
