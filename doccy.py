@@ -47,6 +47,17 @@ TESTCMD = "test"
 MENTION_REGEX = "^<@(|[WU].+?)>(.*)"
 admin_phrases = ['check-who','get-latest','annoy-all']
 
+scouting_phrases = ['What is their team number?',
+                        'What is their team name?',
+                            'What is the coolest part of their robot?',
+                                'During auto, can they: (0) Nothing, (1) Hang, (2) Park, (3) Mark, (4) Sample, (10) All? (Ex. 2,3 means park and mark)',
+                                        'How reliable is their autonomous? (Scale 1-10)',
+                                            'During teleop, can they: (1) Score minerals in depot? (3) Score minerals in rover? (4) Both?',
+                                                'How reliable is their teleop scoring? (1-10)',
+                                                    'How many minerals can you score, on average, in teleop? (Answer with #): ',
+                                                        'During endgame, can they: (0) Nothing, (5) Latch?',
+                                                            'How reliable is their latching mechanism? (1-10)']
+
 #Boolean that is set for documentation vs conversationality. Assumes everything is documentation.
 is_documentation = True
 
@@ -251,6 +262,51 @@ def restart():
     '''
     app.restart()
 
+def score_team(arr):
+    '''
+    Used to score a team given its scouting.
+    Array as follows:
+        Team # , Team Name, Coolest part, auto, auto reliability, teleop, teleop reliability, teleop avg score, endgame, endgame reliability
+    Scoring is as follows:
+        Autonomous
+            (0) Nothing
+            (1) Latching
+            (2) Parking
+            (3) Marking
+            (4) Sampling
+            (10) All
+        TeleOp
+            (0) Nothing
+            (1) Able to score in depot
+            (3) Able to score in rover
+        Endgame:
+            (0) Nothing
+            (5) Latch
+    :return: score based on scouting
+    '''
+    important_indexes = [3,5,8]
+    score = 0
+    for i in important_indexes:
+        nums = map(lambda x: int(x), arr[i].split(","))
+        score += sum(nums)*(int(arr[i+1])) * .1
+    score += (.1*int(arr[7]) + .01*len(arr[2]))
+    answer = 100*(score**4)/((score**4)+600*score)
+    return answer
+
+def get_best_teams():
+    '''
+    returns list with the top n teams
+    :return: array with top n teams
+    '''
+    gc = gspread.authorize(credentials)
+    scout_sheet = gc.open('Scouted Teams 2018').sheet1
+    score_vals = scout_sheet.col_values(11)[1:]
+    num_vals = scout_sheet.col_values(1)[1:]
+    name_vals = scout_sheet.col_values(2)[1:]
+    names = ['{}: {}'.format(a,b) for a,b in zip(num_vals, name_vals)]
+    teams = dict(zip(names, score_vals))
+    return sorted(teams, key=teams.get, reverse= True)
+
 
 def handle_convo(text,channel,user):
     '''
@@ -298,6 +354,14 @@ def handle_convo(text,channel,user):
             index = docs.row_count
             row = docs.row_values(index)
             response = "The last documentation was \"{}\" on {}".format(row[1],row[2])
+        elif 'best teams' in text:
+            if len(get_best_teams()) == 0:
+                response = "Looks like there isn't a competition, or there are no teams recorded!"
+            else:
+                str = "Here's a list of the best teams so far: \n"
+                for team in get_best_teams():
+                    str += team + '\n'
+                response = str
         elif admin_phrases[2] in text:
             annoy_all()
             response = "I annoyed people!"
@@ -333,6 +397,7 @@ if __name__ == "__main__":
         print('All systems go!')
         doccybot_id = slack_client.api_call("auth.test")["user_id"]
         curruser_id = "member"
+        sessions = {}
         with open('members.txt') as members:
             data = json.load(members)
             while True:
@@ -344,12 +409,35 @@ if __name__ == "__main__":
                     for i in data['members']:
                         if i['id'] == curruser_id:
                             currname = i['profile']['real_name']
-                            if len(command) < 40 or '-nd' in command:
-                                handle_convo(command, channel, currname)
-                                print(currname, "said", command[:20] + "...", "in", channel)
-                            else:
-                                handle_documentation(command, channel, currname, currtime)
-                                print(currname, "said", command[:20] + "...", "in", channel)
+                            if currname in sessions:
+                                if 'exit' in command:
+                                    del sessions[currname]
+                                    send("You are now free to document!", channel)
+                                elif len(scouting_phrases) > sessions[currname][1]-1:
+                                    sessions[currname][2].append(command)
+                                    index = sessions[currname][1]
+                                    try:
+                                        send(scouting_phrases[index], channel)
+                                        sessions[currname][1] = sessions[currname][1] + 1
+                                    except:
+                                        send("Thank you for scouting, {}".format(currname), channel)
+                                        gc = gspread.authorize(credentials)
+                                        scout_sheet = gc.open('Scouted Teams 2018').sheet1
+                                        scout_sheet.append_row(sessions[currname][2]+[score_team(sessions[currname][2]), convert_ts_to_date(time.time(), "date")])
+                                        # scout_sheet.append(sessions[currname][2])
+                                        del sessions[currname]
+                                        send("You are now free to document!", channel)
+                            if command == 'scout':
+                                sessions.update({currname:[time.time(), 1, [] ]})
+                                send("You are now scouting!", channel)
+                                send(scouting_phrases[0], channel)
+                            elif currname not in sessions:
+                                if(len(command) < 40 or '-nd' in command):
+                                    handle_convo(command, channel, currname)
+                                    print(currname, "said", command[:20] + "...", "in", channel)
+                                else:
+                                    handle_documentation(command, channel, currname, currtime)
+                                    print(currname, "said", command[:20] + "...", "in", channel)
                 # If it is 8:00 on any given day (doccy is 4 hours ahead)
                 if convert_ts_to_date(time.time(), "time") == "23-50-00":
                     print("It's time!")

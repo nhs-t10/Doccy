@@ -20,5 +20,5 @@ credentials = ServiceAccountCredentials.from_json_keyfile_name('doccy-215702-bd6
 # Google Sheets API Instance
 gc = gspread.authorize(credentials)
 
-sh = gc.create('Upcoming Robotics Events and Meetings 2018')
+sh = gc.create('Scouted Teams 2018')
 sh.share('nhsdoccy@gmail.com', perm_type='user', role='writer')
