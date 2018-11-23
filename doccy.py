@@ -291,7 +291,7 @@ def score_team(arr):
         score += sum(nums)*(int(arr[i+1])) * .1
     score += (.1*int(arr[7]) + .01*len(arr[2]))
     answer = 100*(score**4)/((score**4)+600*score)
-    return answer
+    return round(answer, 2)
 
 def get_best_teams():
     '''
@@ -359,8 +359,8 @@ def handle_convo(text,channel,user):
                 response = "Looks like there isn't a competition, or there are no teams recorded!"
             else:
                 str = "Here's a list of the best teams so far: \n"
-                for team in get_best_teams():
-                    str += team + '\n'
+                for team, score in get_best_teams():
+                    str += team + ", Score: ".format(score) + '\n'
                 response = str
         elif admin_phrases[2] in text:
             annoy_all()
