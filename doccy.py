@@ -305,7 +305,7 @@ def get_best_teams():
     name_vals = scout_sheet.col_values(2)[1:]
     names = ['{}: {}'.format(a,b) for a,b in zip(num_vals, name_vals)]
     teams = dict(zip(names, score_vals))
-    return sorted(teams, key=teams.get, reverse= True)
+    return sorted(teams, key=teams.get, reverse= True), teams
 
 
 def handle_convo(text,channel,user):
@@ -359,8 +359,10 @@ def handle_convo(text,channel,user):
                 response = "Looks like there isn't a competition, or there are no teams recorded!"
             else:
                 str = "Here's a list of the best teams so far: \n"
-                for team, score in get_best_teams():
-                    str += team + ", Score: ".format(score) + '\n'
+                teams, score = get_best_teams()
+                print(teams, score)
+                for team in teams:
+                    str += team + ", ({})".format(score[team]) + '\n'
                 response = str
         elif admin_phrases[2] in text:
             annoy_all()

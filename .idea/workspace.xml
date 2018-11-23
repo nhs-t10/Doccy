@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d84e5175-8330-4088-ac23-90121a8fa74d" name="Default" comment="" />
+    <list default="true" id="d84e5175-8330-4088-ac23-90121a8fa74d" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/doccy.py" beforeDir="false" afterPath="$PROJECT_DIR$/doccy.py" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,12 +34,12 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="py" value="6024" />
+          <entry key="py" value="6115" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Python" value="6024" />
+          <entry key="Python" value="6115" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -69,13 +71,13 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/doccy.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-2070">
-              <caret line="360" column="23" lean-forward="true" selection-start-line="360" selection-start-column="23" selection-end-line="360" selection-end-column="23" />
+            <state relative-caret-position="482">
+              <caret line="361" column="40" lean-forward="true" selection-start-line="361" selection-start-column="40" selection-end-line="361" selection-end-column="40" />
               <folding>
                 <element signature="e#44#55#0" expanded="true" />
-                <marker date="1542955409894" expanded="true" signature="10708:11202" ph="..." />
-                <marker date="1542955409894" expanded="true" signature="11238:11243" ph="..." />
-                <marker date="1542955409894" expanded="true" signature="14949:14951" ph="..." />
+                <marker date="1543007694694" expanded="true" signature="10718:11212" ph="..." />
+                <marker date="1543007694694" expanded="true" signature="11248:11253" ph="..." />
+                <marker date="1543007694694" expanded="true" signature="15023:15025" ph="..." />
               </folding>
             </state>
           </provider>
@@ -442,13 +444,13 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/doccy.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2070">
-          <caret line="360" column="23" lean-forward="true" selection-start-line="360" selection-start-column="23" selection-end-line="360" selection-end-column="23" />
+        <state relative-caret-position="482">
+          <caret line="361" column="40" lean-forward="true" selection-start-line="361" selection-start-column="40" selection-end-line="361" selection-end-column="40" />
           <folding>
             <element signature="e#44#55#0" expanded="true" />
-            <marker date="1542955409894" expanded="true" signature="10708:11202" ph="..." />
-            <marker date="1542955409894" expanded="true" signature="11238:11243" ph="..." />
-            <marker date="1542955409894" expanded="true" signature="14949:14951" ph="..." />
+            <marker date="1543007694694" expanded="true" signature="10718:11212" ph="..." />
+            <marker date="1543007694694" expanded="true" signature="11248:11253" ph="..." />
+            <marker date="1543007694694" expanded="true" signature="15023:15025" ph="..." />
           </folding>
         </state>
       </provider>
