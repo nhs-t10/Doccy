@@ -367,14 +367,14 @@ def handle_convo(text,channel,user):
         elif admin_phrases[2] in text:
             annoy_all()
             response = "I annoyed people!"
-        elif any(match in text for match in greetings):
-            response = 'Oh, hey there {}'.format(user)
         elif any(match in text for match in swears):
             response = 'Hey, no need to use that kind of language!'
         elif any(match in text for match in goodbyes):
             response = 'See you later, {}'.format(user)
         elif any(match in text for match in thanks):
             response = 'You\'re welcome, {}'.format(user)
+        elif any(match in text for match in greetings):
+            response = 'Oh, hey there {}'.format(user)
         elif 'flip a coin' in text:
             response = "The coin came up {}!".format(random.choice(['heads','tails']))
         elif '?' in text:
