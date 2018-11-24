@@ -381,6 +381,8 @@ def handle_convo(text,channel,user):
             response = random.choice(question_responses)
         elif 'register' in text:
             response = "You're already registered! Get documenting!"
+        elif len(text) == 1:
+            response = "You are now free to document."
         else:
             response = random.choice(random_responses)
     except:
@@ -414,7 +416,6 @@ if __name__ == "__main__":
                             if currname in sessions:
                                 if 'exit' in command:
                                     del sessions[currname]
-                                    send("You are now free to document!", channel)
                                 elif len(scouting_phrases) > sessions[currname][1]-1:
                                     sessions[currname][2].append(command)
                                     index = sessions[currname][1]
