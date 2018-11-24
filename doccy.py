@@ -5,7 +5,7 @@ import json
 import time
 import re
 from slackclient import SlackClient
-import API_KEYS
+import API_Keys
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import urllib.request
@@ -22,7 +22,7 @@ credentials = ServiceAccountCredentials.from_json_keyfile_name('doccy-215702-bd6
 # Google Sheets API Instance
 
 # Slack Token (taken from python file for protection)
-slack_token = API_KEYS.slack_token
+slack_token = API_Keys.slack_token
 slack_client = SlackClient(slack_token)
 
 # Sheets instances
@@ -34,7 +34,7 @@ slack_client = SlackClient(slack_token)
 # reg = gc.open("Registered").sheet1
 
 # Heroku API Client
-heroku_conn = heroku3.from_key(API_KEYS.heroku_key)
+heroku_conn = heroku3.from_key(API_Keys.heroku_key)
 app = heroku_conn.apps()['young-caverns-32300']
 
 # more constants
