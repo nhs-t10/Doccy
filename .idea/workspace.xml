@@ -134,6 +134,7 @@
       <find>check_if</find>
       <find>print</find>
       <find>team name</find>
+      <find>You are no</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -169,7 +170,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -181,6 +181,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
