@@ -1,2 +1,2 @@
 # Doccy
-A slack documentation bot for T-10 documentation automation.
+A documentation Slack Bot for T-10
