@@ -34,7 +34,7 @@ slack_client = SlackClient(slack_token)
 # reg = gc.open("Registered").sheet1
 
 # Heroku API Client
-heroku_conn = heroku3.from_key('119be864-9d74-4722-803f-4e05a06da242')
+heroku_conn = heroku3.from_key(API_KEYS.heroku_key)
 app = heroku_conn.apps()['young-caverns-32300']
 
 # more constants
